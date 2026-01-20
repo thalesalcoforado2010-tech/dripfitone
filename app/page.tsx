@@ -1,6 +1,7 @@
 import { Header } from "../components/Header";
 import { ProductCard } from "../components/ProductCard";
-import { products } from "../data/products";
+import { products } from "@/data/products";
+
 
 export default function Page() {
   return (
