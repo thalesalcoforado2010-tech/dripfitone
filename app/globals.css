@@ -3,6 +3,10 @@
 /* Base visual DripFit One (dark premium) */
 :root{
   --bg: #050506;
+
+  /* usados pelo ScrollDarken */
+  --bg-overlay: 0;
+  --bg-vignette: 0.12;
 }
 
 html, body{
@@ -11,9 +15,8 @@ html, body{
 
 body{
   margin: 0;
-  background: radial-gradient(1200px 800px at 20% 0%, rgba(255,255,255,0.06), transparent 55%),
-              radial-gradient(900px 600px at 80% 10%, rgba(255,255,255,0.04), transparent 60%),
-              var(--bg);
+  background: var(--bg);
+  color: white;
 }
 
 /* Qualidade “premium” */

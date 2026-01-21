@@ -1,167 +1,131 @@
+// app/page.tsx
 import Link from "next/link";
-import { products } from "@/data/products";
-import { Container } from "@/components/ui/Container";
-import { ButtonLink } from "@/components/ui/Button";
+import ProductCard from "@/components/ProductCard";
+import ScrollReveal from "@/components/ScrollReveal";
+import { getProductsByGender } from "@/data/products";
 
-export default function Home() {
-  const featuredSlug = products[0]?.slug;
+export default function HomePage() {
+  const male = getProductsByGender("male");
+  const female = getProductsByGender("female");
 
   return (
-    <main className="min-h-screen">
-      <Container className="pt-14 pb-10 sm:pt-20 sm:pb-14">
-        <p className="text-xs font-semibold tracking-[0.18em] text-white/60">
-          DRIPFIT ONE
-        </p>
+    <div className="mx-auto max-w-6xl px-4">
+      {/* HERO */}
+      <section className="pt-6 pb-10">
+        <ScrollReveal>
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-8 md:p-12">
+            <div className="pointer-events-none absolute inset-0">
+              <div className="absolute -top-40 left-1/2 h-72 w-[720px] -translate-x-1/2 rounded-full bg-white/10 blur-3xl" />
+              <div className="absolute -bottom-40 left-1/4 h-72 w-[520px] rounded-full bg-white/6 blur-3xl" />
+            </div>
 
-        <h1 className="mt-4 max-w-4xl text-4xl sm:text-6xl font-semibold tracking-tight text-white">
-          Preto. Precisão. Presença.
-        </h1>
+            <div className="relative">
+              <p className="text-xs tracking-[0.28em] text-white/55">
+                FEITO PARA QUEM TRANSFORMA ENERGIA EM MOVIMENTO
+              </p>
 
-        <p className="mt-4 max-w-2xl text-base sm:text-lg text-white/70 leading-relaxed">
-          Feito para quem transforma energia em movimento — Vista Drip.
-        </p>
+              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white/90 md:text-5xl">
+                Vista Drip.
+              </h1>
 
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <ButtonLink href="#colecao" scroll={true}>
-            Ver coleção
-          </ButtonLink>
-          <ButtonLink href="#manifesto" variant="ghost" scroll={true}>
-            Manifesto
-          </ButtonLink>
-        </div>
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/55 md:text-base">
+                Uma estética premium, escura, precisa. Menos ruído. Mais presença.
+              </p>
 
-        <div className="mt-12 h-px w-full bg-white/10" />
-      </Container>
-
-      <Container size="wide" className="pb-16">
-        <section
-          id="colecao"
-          className="rounded-[28px] border border-white/10 bg-white/[0.04] backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.55)]"
-        >
-          <div className="p-6 sm:p-8">
-            <p className="text-xs font-semibold tracking-[0.18em] text-white/60">
-              COLEÇÃO
-            </p>
-
-            <div className="mt-2 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-              <div className="lg:max-w-xl">
-                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
-                  Fit Core
-                </h2>
-
-                <p className="mt-3 text-white/70 leading-relaxed">
-                  Peças essenciais, corte limpo, presença. O preto como linguagem —
-                  o resto é execução.
-                </p>
-
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  {products.map((p) => (
-                    <Link
-                      key={p.slug}
-                      href={`/products/${p.slug}`}
-                      className="group rounded-[22px] border border-white/10 bg-white/[0.03] p-5 transition-all duration-200 hover:bg-white/[0.06] hover:border-white/20 hover:-translate-y-0.5"
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="text-[11px] font-semibold tracking-[0.18em] text-white/55">
-                          FIT CORE
-                        </p>
-                        <span className="text-[11px] font-semibold text-white/55">
-                          NEW
-                        </span>
-                      </div>
-
-                      <h3 className="mt-3 text-lg font-semibold tracking-tight text-white">
-                        {p.name}
-                      </h3>
-
-                      <p className="mt-2 text-sm text-white/65">
-                        {p.price.toLocaleString("pt-BR", {
-                          style: "currency",
-                          currency: "BRL",
-                        })}
-                      </p>
-
-                      <div className="mt-5 h-44 rounded-[18px] border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.02] overflow-hidden relative">
-                        <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                          <div className="absolute -top-20 left-1/2 h-64 w-40 -translate-x-1/2 rotate-12 bg-white/10 blur-2xl" />
-                        </div>
-                      </div>
-
-                      <p className="mt-4 text-sm text-white/60 group-hover:text-white/75 transition-colors">
-                        Ver detalhes →
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              <div className="lg:w-[420px] rounded-[24px] border border-white/10 bg-white/[0.03] p-6">
-                <p className="text-xs font-semibold tracking-[0.18em] text-white/60">
-                  DESTAQUE
-                </p>
-
-                <h3 className="mt-3 text-xl font-semibold tracking-tight text-white">
-                  Página por produto estilo Apple.
-                </h3>
-
-                <p className="mt-3 text-white/70 leading-relaxed">
-                  Cada peça vira uma experiência: vídeo do tecido, detalhes de
-                  costura, caimento, e animações por rolagem.
-                </p>
-
-                <div className="mt-5 h-px w-full bg-white/10" />
-
-                <ul className="mt-5 space-y-3 text-sm text-white/70">
-                  <li>• Vídeo hero em loop (tecido/caimento)</li>
-                  <li>• Seções com reveal no scroll</li>
-                  <li>• Close-up da textura com zoom</li>
-                  <li>• CTA elegante e “sticky” no mobile</li>
-                </ul>
-
-                {/* ✅ Só renderiza se existir slug (evita /products/) */}
-                {featuredSlug ? (
-                  <div className="mt-6">
-                    <ButtonLink href={`/products/${featuredSlug}`}>
-                      Ver a peça em destaque
-                    </ButtonLink>
-                  </div>
-                ) : (
-                  <p className="mt-6 text-sm text-white/60">
-                    Nenhum produto cadastrado ainda.
-                  </p>
-                )}
+              <div className="mt-6 flex flex-wrap gap-2">
+                <Link
+                  href="/masculino"
+                  className="rounded-2xl border border-white/12 bg-white/6 px-4 py-2 text-xs tracking-[0.16em] text-white/80 transition hover:bg-white/10 hover:text-white/90"
+                >
+                  MASCULINO
+                </Link>
+                <Link
+                  href="/feminino"
+                  className="rounded-2xl border border-white/12 bg-white/6 px-4 py-2 text-xs tracking-[0.16em] text-white/80 transition hover:bg-white/10 hover:text-white/90"
+                >
+                  FEMININO
+                </Link>
               </div>
             </div>
           </div>
-        </section>
+        </ScrollReveal>
+      </section>
 
-        <section
-          id="manifesto"
-          className="mt-6 rounded-[28px] border border-white/10 bg-white/[0.03] backdrop-blur-xl"
-        >
-          <div className="p-6 sm:p-8">
-            <p className="text-xs font-semibold tracking-[0.18em] text-white/60">
-              MANIFESTO
-            </p>
+      {/* MASCULINO */}
+      <section className="py-10">
+        <ScrollReveal>
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <p className="text-xs tracking-[0.28em] text-white/45">SELEÇÃO</p>
+              <h2 className="mt-2 text-xl font-semibold tracking-tight text-white/85 md:text-2xl">
+                Masculino
+              </h2>
+            </div>
 
-            <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-white">
-              Energia em movimento.
-            </h2>
+            <Link
+              href="/masculino"
+              className="text-xs tracking-[0.16em] text-white/55 transition hover:text-white/80"
+            >
+              VER TUDO →
+            </Link>
+          </div>
+        </ScrollReveal>
 
-            <p className="mt-4 max-w-3xl text-base sm:text-lg text-white/70 leading-relaxed">
-              A DripFit One nasce do preto: silêncio, foco e presença. Cada peça é
-              construída para performance e estética — sem ruído, sem excesso.
-            </p>
+        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {male.map((p) => (
+            <ScrollReveal key={p.slug}>
+              <ProductCard product={p} />
+            </ScrollReveal>
+          ))}
+        </div>
+      </section>
 
-            <div className="mt-8 h-px w-full bg-white/10" />
+      {/* FEMININO */}
+      <section className="py-10">
+        <ScrollReveal>
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <p className="text-xs tracking-[0.28em] text-white/45">SELEÇÃO</p>
+              <h2 className="mt-2 text-xl font-semibold tracking-tight text-white/85 md:text-2xl">
+                Feminino
+              </h2>
+            </div>
 
-            <p className="mt-4 text-sm text-white/60">
-              Próximo passo: transformar cada produto numa landing com scroll
-              storytelling, vídeo e detalhes do tecido.
+            <Link
+              href="/feminino"
+              className="text-xs tracking-[0.16em] text-white/55 transition hover:text-white/80"
+            >
+              VER TUDO →
+            </Link>
+          </div>
+        </ScrollReveal>
+
+        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {female.map((p) => (
+            <ScrollReveal key={p.slug}>
+              <ProductCard product={p} />
+            </ScrollReveal>
+          ))}
+        </div>
+      </section>
+
+      {/* MANIFESTO (âncora do header) */}
+      <section id="manifesto" className="py-16">
+        <ScrollReveal>
+          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 md:p-12">
+            <p className="text-xs tracking-[0.28em] text-white/45">MANIFESTO</p>
+            <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white/85 md:text-3xl">
+              Energia vira movimento. Movimento vira identidade.
+            </h3>
+            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/55 md:text-base">
+              DripFit One é para quem constrói presença no silêncio. Design premium,
+              escuro, preciso — sem excesso.
             </p>
           </div>
-        </section>
-      </Container>
-    </main>
+        </ScrollReveal>
+      </section>
+
+      <div id="buy" className="h-1" />
+    </div>
   );
 }
