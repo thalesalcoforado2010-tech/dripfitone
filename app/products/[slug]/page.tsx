@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProductBySlug, products } from "@/data/products";
+import { getProductBySlug } from "@/data/products";
 import { Container } from "@/components/ui/Container";
 import ScrollReveal from "@/components/ScrollReveal";
 import StickyBuyBar from "@/components/StickyBuyBar";
+import ProductPurchasePanel from "@/components/ProductPurchasePanel";
 
 function formatBRL(price: number) {
   return price.toLocaleString("pt-BR", {
@@ -42,7 +43,6 @@ type PageProps = {
 
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params;
-
   if (!slug) return notFound();
 
   const product = getProductBySlug(slug);
@@ -107,24 +107,28 @@ export default async function ProductPage({ params }: PageProps) {
                 </span>
 
                 <a
+                  href="#purchase"
+                  className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/80 transition hover:border-white/20 hover:bg-white/[0.06]"
+                >
+                  Comprar →
+                </a>
+
+                <a
                   href="#details"
                   className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/80 transition hover:border-white/20 hover:bg-white/[0.06]"
                 >
                   Ver detalhes →
                 </a>
               </div>
-
-              <div className="mt-8">
-                <button className="w-full rounded-2xl bg-white px-6 py-4 text-xs tracking-[0.18em] text-black transition hover:opacity-90">
-                  COMPRAR
-                </button>
-
-                <p className="mt-4 text-xs tracking-[0.24em] text-white/35">
-                  PAGAMENTO SEGURO • TROCA SIMPLES • SUPORTE DIRETO
-                </p>
-              </div>
             </ScrollReveal>
           </div>
+        </section>
+
+        {/* PURCHASE */}
+        <section id="purchase" className="mt-16">
+          <ScrollReveal>
+            <ProductPurchasePanel product={product} />
+          </ScrollReveal>
         </section>
 
         {/* DETAILS */}

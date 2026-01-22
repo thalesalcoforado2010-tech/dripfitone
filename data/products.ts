@@ -1,6 +1,8 @@
 // data/products.ts
 export type Gender = "male" | "female";
 
+export type Size = "PP" | "P" | "M" | "G" | "GG";
+
 export type Product = {
   slug: string;
   name: string;
@@ -16,6 +18,10 @@ export type Product = {
   // Detalhes extras para a página do produto
   highlights: string[];
   details: string[];
+
+  // Compra (mini-checkout)
+  sizes?: Size[];
+  defaultSize?: Size;
 
   // SEO
   seo?: {
@@ -45,6 +51,8 @@ export const products: Product[] = [
       "Gola: reforçada e discreta",
       "Sensação: macia e estruturada",
     ],
+    sizes: ["P", "M", "G", "GG"],
+    defaultSize: "M",
     seo: {
       title: "Black Core Tee — DripFit One",
       description:
@@ -67,6 +75,8 @@ export const products: Product[] = [
       "Construção: firme e confortável",
       "Uso: camisa ou terceira peça",
     ],
+    sizes: ["P", "M", "G", "GG"],
+    defaultSize: "M",
   },
   {
     slug: "dripfit-carbon-jogger",
@@ -80,6 +90,8 @@ export const products: Product[] = [
     heroImage: "/products/carbon-jogger.jpg",
     highlights: ["Conforto premium", "Linha minimalista", "Acabamento refinado"],
     details: ["Cós: firme e confortável", "Barra: ajuste clean", "Toque: macio"],
+    sizes: ["P", "M", "G", "GG"],
+    defaultSize: "M",
   },
 
   {
@@ -93,7 +105,13 @@ export const products: Product[] = [
     gender: "female",
     heroImage: "/products/noir-sculpt-top.jpg",
     highlights: ["Sustentação confortável", "Linha limpa", "Toque premium"],
-    details: ["Sensação: firme e macia", "Acabamento: limpo", "Uso: treino e lifestyle"],
+    details: [
+      "Sensação: firme e macia",
+      "Acabamento: limpo",
+      "Uso: treino e lifestyle",
+    ],
+    sizes: ["PP", "P", "M", "G"],
+    defaultSize: "M",
   },
   {
     slug: "dripfit-onyx-flow-legging",
@@ -107,6 +125,8 @@ export const products: Product[] = [
     heroImage: "/products/onyx-flow-legging.jpg",
     highlights: ["Compressão equilibrada", "Cintura alta clean", "Acabamento premium"],
     details: ["Cós: cintura alta", "Construção: firme", "Mobilidade: alta"],
+    sizes: ["PP", "P", "M", "G", "GG"],
+    defaultSize: "M",
   },
   {
     slug: "dripfit-ivory-layer-hoodie",
@@ -120,6 +140,8 @@ export const products: Product[] = [
     heroImage: "/products/ivory-layer-hoodie.jpg",
     highlights: ["Toque macio", "Caimento premium", "Estética clean"],
     details: ["Modelagem: premium", "Punhos: firmes", "Uso: diário e pós-treino"],
+    sizes: ["P", "M", "G", "GG"],
+    defaultSize: "M",
   },
 ];
 
