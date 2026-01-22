@@ -1,27 +1,41 @@
+// components/ScrollReveal.tsx
 "use client";
 
-import { ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import type { ReactNode } from "react";
+import { motion } from "framer-motion";
 
-type Props = {
+type ScrollRevealProps = {
   children: ReactNode;
   className?: string;
+
+  /** delay em ms (ex: 120, 240) */
+  delayMs?: number;
+
+  /** animação base */
+  y?: number;
+
+  /** revela apenas 1x */
+  once?: boolean;
+
+  /** margem do viewport (framer) */
+  margin?: string;
 };
 
-export default function ScrollReveal({ children, className }: Props) {
-  const reduce = useReducedMotion();
-
-  if (reduce) {
-    return <div className={className}>{children}</div>;
-  }
-
+export default function ScrollReveal({
+  children,
+  className,
+  delayMs = 0,
+  y = 24,
+  once = true,
+  margin = "-120px",
+}: ScrollRevealProps) {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 14 }}
+      initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.22 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once, margin }}
+      transition={{ duration: 0.6, ease: "easeOut", delay: delayMs / 1000 }}
     >
       {children}
     </motion.div>

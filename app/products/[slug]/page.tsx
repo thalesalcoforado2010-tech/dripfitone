@@ -1,34 +1,35 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { products } from "@/data/products";
+import { getProductBySlug, products } from "@/data/products";
 import { Container } from "@/components/ui/Container";
 import ScrollReveal from "@/components/ScrollReveal";
 import StickyBuyBar from "@/components/StickyBuyBar";
 
+function formatBRL(price: number) {
+  return price.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+}
+
 /* ============================
-   METADATA DINÂMICO (PREMIUM)
+   METADATA
 ============================ */
 type MetadataProps = {
   params: { slug: string };
 };
 
-export async function generateMetadata(
-  { params }: MetadataProps
-): Promise<Metadata> {
-  const product = products.find((p) => p.slug === params.slug);
-
-  if (!product) {
-    return {
-      title: "Produto",
-      description:
-        "Peça premium DripFit One. Design, performance e acabamento de alto nível.",
-    };
-  }
+export function generateMetadata({ params }: MetadataProps): Metadata {
+  const product = getProductBySlug(params.slug);
+  if (!product) return { title: "Produto — DripFit One" };
 
   return {
-    title: product.name,
-    description: `Peça premium DripFit One — ${product.name}. Design, performance e presença.`,
+    title: product.seo?.title ?? `${product.name} — DripFit One`,
+    description: product.seo?.description ?? product.description,
   };
 }
 
@@ -44,18 +45,18 @@ export default async function ProductPage({ params }: PageProps) {
 
   if (!slug) return notFound();
 
-  const product = products.find((p) => p.slug === slug);
+  const product = getProductBySlug(slug);
   if (!product) return notFound();
 
-  const priceLabel = `R$ ${product.price.toFixed(2).replace(".", ",")}`;
+  const priceLabel = formatBRL(product.price);
 
   return (
-    <main className="min-h-screen">
-      <Container className="pt-10 pb-16 sm:pt-14">
-        {/* HEADER */}
+    <main className="min-h-screen bg-black text-white">
+      <Container className="pt-10 pb-20 sm:pt-14">
+        {/* TOP */}
         <div className="flex items-center justify-between gap-4">
           <Link
-            href="/"
+            href={product.gender === "male" ? "/masculino" : "/feminino"}
             className="text-sm text-white/70 hover:text-white transition"
           >
             ← Voltar
@@ -67,154 +68,119 @@ export default async function ProductPage({ params }: PageProps) {
         </div>
 
         {/* HERO */}
-        <section className="mt-10 grid gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <p className="text-xs font-semibold tracking-[0.18em] text-white/60">
-              DROP 01
-            </p>
-
-            <h1 className="mt-4 text-4xl sm:text-6xl font-semibold tracking-tight text-white">
-              {product.name}
-            </h1>
-
-            <p className="mt-6 max-w-xl text-base sm:text-lg text-white/70">
-              Silhueta limpa, performance real e acabamento premium. Uma peça
-              feita para presença — com conforto que acompanha movimento.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80">
-                {priceLabel}
-              </span>
-
-              <a
-                href="#detalhes"
-                className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/80 transition hover:border-white/20 hover:bg-white/[0.06]"
-              >
-                Ver detalhes →
-              </a>
-            </div>
-
-            <div className="mt-10 grid grid-cols-2 gap-3">
-              <Spec title="Tecido" value="Premium / macio" />
-              <Spec title="Corte" value="Fit (modela bem)" />
-              <Spec title="Cor" value="Preta total" />
-              <Spec title="Uso" value="Treino / lifestyle" />
-            </div>
-          </div>
-
-          {/* MÍDIA */}
-          <div className="lg:col-span-6">
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 backdrop-blur-xl">
-              <div className="pointer-events-none absolute inset-0">
-                <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-                <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-white/5 blur-3xl" />
-              </div>
-
-              <div className="relative">
-                <p className="text-xs font-semibold tracking-[0.18em] text-white/50">
-                  MÍDIA (placeholder)
-                </p>
-
-                <div className="mt-6 aspect-[16/10] w-full rounded-2xl border border-white/10 bg-black/40" />
-
-                <p className="mt-6 text-sm text-white/60">
-                  Aqui entra o vídeo do tecido ou close-ups da peça. Estrutura
-                  premium já pronta.
-                </p>
+        <section className="mt-10 grid gap-10 lg:grid-cols-12 lg:items-start">
+          {/* MEDIA */}
+          <div className="lg:col-span-7">
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-xl">
+              <div className="relative aspect-[4/5] w-full">
+                <Image
+                  src={product.heroImage}
+                  alt={product.name}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 800px"
+                  className="object-cover"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/10" />
               </div>
             </div>
           </div>
+
+          {/* INFO */}
+          <div className="lg:col-span-5 lg:pt-2">
+            <ScrollReveal>
+              <p className="text-xs tracking-[0.32em] text-white/45">
+                {product.tagline}
+              </p>
+
+              <h1 className="mt-4 text-4xl sm:text-6xl font-semibold tracking-tight text-white">
+                {product.name}
+              </h1>
+
+              <p className="mt-6 text-base sm:text-lg text-white/70">
+                {product.description}
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85">
+                  {priceLabel}
+                </span>
+
+                <a
+                  href="#details"
+                  className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/80 transition hover:border-white/20 hover:bg-white/[0.06]"
+                >
+                  Ver detalhes →
+                </a>
+              </div>
+
+              <div className="mt-8">
+                <button className="w-full rounded-2xl bg-white px-6 py-4 text-xs tracking-[0.18em] text-black transition hover:opacity-90">
+                  COMPRAR
+                </button>
+
+                <p className="mt-4 text-xs tracking-[0.24em] text-white/35">
+                  PAGAMENTO SEGURO • TROCA SIMPLES • SUPORTE DIRETO
+                </p>
+              </div>
+            </ScrollReveal>
+          </div>
         </section>
 
-        {/* STORYTELLING */}
-        <section id="detalhes" className="mt-16 space-y-10">
-          <ScrollReveal>
-            <StoryBlock
-              label="STORY 01"
-              title="Minimalismo agressivo. Presença imediata."
-              text="A estética é limpa, mas o impacto é forte. O preto total faz a
-              peça conversar com qualquer composição — do treino ao lifestyle."
-            />
-          </ScrollReveal>
+        {/* DETAILS */}
+        <section id="details" className="mt-16">
+          <div className="grid gap-14 lg:grid-cols-2">
+            <ScrollReveal>
+              <div>
+                <p className="text-xs tracking-[0.32em] text-white/40">
+                  DESTAQUES
+                </p>
+                <div className="mt-6 space-y-3">
+                  {product.highlights.map((h) => (
+                    <div key={h} className="text-sm text-white/70">
+                      <span className="text-white/35">— </span>
+                      {h}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
 
-          <ScrollReveal delayMs={120}>
-            <StoryBlock
-              label="STORY 02"
-              title="Tecido premium com toque certo."
-              text="Conforto e estrutura. A ideia é vestir bem sem moleza — manter
-              caimento e presença."
-            />
-          </ScrollReveal>
+            <ScrollReveal delayMs={120}>
+              <div>
+                <p className="text-xs tracking-[0.32em] text-white/40">
+                  DETALHES
+                </p>
+                <div className="mt-6 space-y-3">
+                  {product.details.map((d) => (
+                    <div key={d} className="text-sm text-white/70">
+                      <span className="text-white/35">— </span>
+                      {d}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
 
-          <ScrollReveal delayMs={240}>
-            <StoryBlock
-              label="STORY 03"
-              title="Construída para movimento."
-              text="Ajuste firme, sem travar. Controle e liberdade ao mesmo tempo."
-            />
-          </ScrollReveal>
-        </section>
+          <div className="mt-14 h-px w-full bg-white/10" />
 
-        {/* ESPECIFICAÇÕES */}
-        <section className="mt-16">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-10 backdrop-blur-xl">
-            <p className="text-xs font-semibold tracking-[0.18em] text-white/60">
-              ESPECIFICAÇÕES
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
+            <p className="text-xs tracking-[0.28em] text-white/35">
+              DRIPFIT ONE • ESSENCIAL • PREMIUM
             </p>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Spec title="Composição" value="A definir" />
-              <Spec title="Gramatura" value="A definir" />
-              <Spec title="Modelagem" value="Fit" />
-              <Spec title="Acabamento" value="Premium" />
-            </div>
-
-            <p className="mt-6 text-sm text-white/60">
-              Esses dados podem ser personalizados por produto futuramente.
-            </p>
+            <Link
+              href={product.gender === "male" ? "/masculino" : "/feminino"}
+              className="text-xs tracking-[0.28em] text-white/60 hover:text-white transition"
+            >
+              VER MAIS →
+            </Link>
           </div>
         </section>
       </Container>
 
-      {/* CTA STICKY */}
       <StickyBuyBar name={product.name} priceLabel={priceLabel} />
     </main>
-  );
-}
-
-/* ============================
-   COMPONENTES AUXILIARES
-============================ */
-function Spec({ title, value }: { title: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
-      <p className="text-xs text-white/50">{title}</p>
-      <p className="mt-1 text-sm font-semibold text-white">{value}</p>
-    </div>
-  );
-}
-
-function StoryBlock({
-  label,
-  title,
-  text,
-}: {
-  label: string;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-10 backdrop-blur-xl">
-      <p className="text-xs font-semibold tracking-[0.18em] text-white/60">
-        {label}
-      </p>
-      <h2 className="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-white">
-        {title}
-      </h2>
-      <p className="mt-4 max-w-3xl text-sm sm:text-base text-white/70">
-        {text}
-      </p>
-    </div>
   );
 }
