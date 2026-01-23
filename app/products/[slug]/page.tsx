@@ -1,12 +1,20 @@
+// app/products/[slug]/page.tsx
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProductBySlug } from "@/data/products";
+import { getProductBySlug, products } from "@/data/products";
 import { Container } from "@/components/ui/Container";
 import ScrollReveal from "@/components/ScrollReveal";
 import StickyBuyBar from "@/components/StickyBuyBar";
 import ProductPurchasePanel from "@/components/ProductPurchasePanel";
+import TrustRow from "@/components/products/TrustRow";
+import ProductDetailsPanel from "@/components/products/ProductDetailsPanel";
+import ReviewsPanel from "@/components/products/ReviewsPanel";
+import FaqPanel from "@/components/products/FaqPanel";
+import CompleteTheLook from "@/components/products/CompleteTheLook";
+import GiftSomeone from "@/components/products/GiftSomeone";
+
 
 function formatBRL(price: number) {
   return price.toLocaleString("pt-BR", {
@@ -89,17 +97,13 @@ export default async function ProductPage({ params }: PageProps) {
           {/* INFO */}
           <div className="lg:col-span-5 lg:pt-2">
             <ScrollReveal>
-              <p className="text-xs tracking-[0.32em] text-white/45">
-                {product.tagline}
-              </p>
+              <p className="text-xs tracking-[0.32em] text-white/45">{product.tagline}</p>
 
               <h1 className="mt-4 text-4xl sm:text-6xl font-semibold tracking-tight text-white">
                 {product.name}
               </h1>
 
-              <p className="mt-6 text-base sm:text-lg text-white/70">
-                {product.description}
-              </p>
+              <p className="mt-6 text-base sm:text-lg text-white/70">{product.description}</p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85">
@@ -131,14 +135,55 @@ export default async function ProductPage({ params }: PageProps) {
           </ScrollReveal>
         </section>
 
-        {/* DETAILS */}
+        {/* TRUST + DETAILS PANEL */}
+        <section className="mt-10 space-y-10">
+          <ScrollReveal>
+            <TrustRow />
+          </ScrollReveal>
+
+          <ScrollReveal delayMs={120}>
+            <ProductDetailsPanel />
+          </ScrollReveal>
+        </section>
+
+        {/* COMPLETE THE LOOK + GIFT */}
+        <section className="mt-10 space-y-10">
+          <ScrollReveal>
+            <CompleteTheLook
+              products={products}
+              excludeSlug={product.slug}
+              filterGender={product.gender}
+              title="COMPLETE O LOOK"
+              subtitle="MESMA LINHA"
+            />
+          </ScrollReveal>
+
+          <ScrollReveal delayMs={120}>
+            <GiftSomeone
+              products={products}
+              excludeSlug={product.slug}
+              currentGender={product.gender}
+            />
+          </ScrollReveal>
+        </section>
+
+        {/* REVIEWS + FAQ */}
+        <section className="mt-10 space-y-10">
+          <ScrollReveal>
+            <ReviewsPanel />
+          </ScrollReveal>
+
+          <ScrollReveal delayMs={120}>
+            <FaqPanel />
+          </ScrollReveal>
+        </section>
+
+        {/* DETAILS (original lists) */}
         <section id="details" className="mt-16">
           <div className="grid gap-14 lg:grid-cols-2">
             <ScrollReveal>
               <div>
-                <p className="text-xs tracking-[0.32em] text-white/40">
-                  DESTAQUES
-                </p>
+                <p className="text-xs tracking-[0.32em] text-white/40">DESTAQUES</p>
                 <div className="mt-6 space-y-3">
                   {product.highlights.map((h) => (
                     <div key={h} className="text-sm text-white/70">
@@ -152,9 +197,7 @@ export default async function ProductPage({ params }: PageProps) {
 
             <ScrollReveal delayMs={120}>
               <div>
-                <p className="text-xs tracking-[0.32em] text-white/40">
-                  DETALHES
-                </p>
+                <p className="text-xs tracking-[0.32em] text-white/40">DETALHES</p>
                 <div className="mt-6 space-y-3">
                   {product.details.map((d) => (
                     <div key={d} className="text-sm text-white/70">
@@ -184,7 +227,7 @@ export default async function ProductPage({ params }: PageProps) {
         </section>
       </Container>
 
-      <StickyBuyBar name={product.name} priceLabel={priceLabel} />
+      <StickyBuyBar name={product.name} priceLabel={priceLabel} href="#purchase" />
     </main>
   );
 }

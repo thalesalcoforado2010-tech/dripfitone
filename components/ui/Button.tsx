@@ -1,39 +1,33 @@
-import Link, { type LinkProps } from "next/link";
-import React from "react";
-import { cn } from "@/lib/cn";
+"use client";
 
-type Variant = "primary" | "ghost";
+import type { ButtonHTMLAttributes } from "react";
 
-const base =
-  "inline-flex items-center justify-center gap-2 rounded-2xl h-12 px-6 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-white/20";
-
-const variants: Record<Variant, string> = {
-  primary: "bg-white text-black hover:bg-white/90",
-  ghost: "border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]",
+type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+  isLoading?: boolean;
 };
 
-export function ButtonLink(
-  props: LinkProps & {
-    children: React.ReactNode;
-    className?: string;
-    variant?: Variant;
-  }
-) {
-  const { className, variant = "primary", children, ...rest } = props;
+export function Button({
+  isLoading,
+  disabled,
+  children,
+  className = "",
+  ...props
+}: Props) {
+  const isDisabled = Boolean(disabled || isLoading);
+
+  const base =
+    "relative flex w-full items-center justify-center rounded-2xl px-6 py-4 text-xs tracking-[0.18em] transition";
+  const state = isDisabled
+    ? "cursor-not-allowed bg-white/20 text-white/50"
+    : "bg-white text-black hover:opacity-90 active:scale-[0.98]";
 
   return (
-    <Link className={cn(base, variants[variant], className)} {...rest}>
-      {children}
-    </Link>
+    <button
+      disabled={isDisabled}
+      className={`${base} ${state} ${className}`}
+      {...props}
+    >
+      {isLoading ? "PROCESSANDO..." : children}
+    </button>
   );
-}
-
-export function Button(
-  props: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    variant?: Variant;
-  }
-) {
-  const { className, variant = "primary", ...rest } = props;
-
-  return <button className={cn(base, variants[variant], className)} {...rest} />;
 }

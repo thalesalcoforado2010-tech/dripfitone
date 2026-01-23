@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartContext";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 function formatBRL(price: number) {
   return price.toLocaleString("pt-BR", {
@@ -17,7 +18,7 @@ function formatBRL(price: number) {
 
 export default function CartPageClient() {
   const router = useRouter();
-  const { items, subtotal, removeItem, updateQty, clear } = useCart();
+  const { items, subtotal, removeItem, updateQty, clear, isReady } = useCart();
 
   const count = useMemo(() => items.reduce((a, i) => a + i.qty, 0), [items]);
 
@@ -34,6 +35,29 @@ export default function CartPageClient() {
     router.push("/checkout");
   }
 
+  /* =========================
+     LOADING (ZERO FLICKER)
+     ========================= */
+  if (!isReady) {
+    return (
+      <section className="mt-10 grid gap-10 lg:grid-cols-12">
+        <div className="lg:col-span-7 space-y-4">
+          <Skeleton className="h-6 w-24" />
+          <Skeleton className="h-28 w-full rounded-3xl" />
+          <Skeleton className="h-28 w-full rounded-3xl" />
+        </div>
+
+        <div className="lg:col-span-5 space-y-4">
+          <Skeleton className="h-6 w-24" />
+          <Skeleton className="h-40 w-full rounded-3xl" />
+        </div>
+      </section>
+    );
+  }
+
+  /* =========================
+     CARRINHO VAZIO
+     ========================= */
   if (items.length === 0) {
     return (
       <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl">
@@ -41,7 +65,9 @@ export default function CartPageClient() {
         <h1 className="mt-4 text-2xl sm:text-3xl font-semibold text-white">
           Seu carrinho está vazio.
         </h1>
-        <p className="mt-3 text-sm text-white/60">Escolha uma peça para começar.</p>
+        <p className="mt-3 text-sm text-white/60">
+          Escolha uma peça para começar.
+        </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
@@ -61,6 +87,9 @@ export default function CartPageClient() {
     );
   }
 
+  /* =========================
+     CARRINHO COM ITENS
+     ========================= */
   return (
     <section className="mt-10 grid gap-10 lg:grid-cols-12">
       {/* ITENS */}
@@ -85,7 +114,9 @@ export default function CartPageClient() {
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-white/90">{it.name}</p>
+                    <p className="text-sm font-semibold text-white/90">
+                      {it.name}
+                    </p>
                     <p className="mt-2 text-xs tracking-[0.22em] text-white/45">
                       TAMANHO {it.size}
                     </p>
@@ -130,7 +161,9 @@ export default function CartPageClient() {
                   </div>
 
                   <div className="text-right">
-                    <p className="text-xs tracking-[0.22em] text-white/45">TOTAL</p>
+                    <p className="text-xs tracking-[0.22em] text-white/45">
+                      TOTAL
+                    </p>
                     <p className="mt-2 text-sm font-semibold text-white/90">
                       {formatBRL(it.price * it.qty)}
                     </p>
@@ -161,7 +194,9 @@ export default function CartPageClient() {
 
             <div className="mt-4 flex items-center justify-between text-white">
               <span className="text-sm font-semibold">Total</span>
-              <span className="text-lg font-semibold">{formatBRL(subtotal)}</span>
+              <span className="text-lg font-semibold">
+                {formatBRL(subtotal)}
+              </span>
             </div>
           </div>
 

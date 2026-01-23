@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Product, Size } from "@/data/products";
 import { useCart } from "@/components/cart/CartContext";
+import Modal from "@/components/ui/Modal";
+import SizeGuide from "@/components/products/SizeGuide";
 
 type Props = {
   product: Product;
@@ -34,6 +36,8 @@ export default function ProductPurchasePanel({ product }: Props) {
 
   const [size, setSize] = useState<Size>(initialSize);
   const [qty, setQty] = useState<number>(1);
+  const [toast, setToast] = useState<string | null>(null);
+  const [openGuide, setOpenGuide] = useState(false);
 
   const subtotal = useMemo(() => product.price * qty, [product.price, qty]);
 
@@ -45,28 +49,45 @@ export default function ProductPurchasePanel({ product }: Props) {
     setQty((q) => Math.min(9, q + 1));
   }
 
-  function handleCheckout() {
-    if (!product?.slug) return;
-
-    const qs = new URLSearchParams();
-    qs.set("slug", product.slug);
-    qs.set("size", size);
-    qs.set("qty", String(qty));
-
-    router.push(`/checkout?${qs.toString()}`);
+  function showToast(msg: string) {
+    setToast(msg);
+    window.setTimeout(() => setToast(null), 1400);
   }
 
   function handleAddToCart() {
     addItem(product, size, qty);
+    showToast("Adicionado ao carrinho");
+  }
+
+  function handleFinalize() {
+    addItem(product, size, qty);
+    router.push("/checkout");
   }
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 backdrop-blur-xl">
+    <div className="relative rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 backdrop-blur-xl">
+      {/* micro feedback */}
+      {toast && (
+        <div className="pointer-events-none absolute right-4 top-4 rounded-full border border-white/15 bg-black/60 px-4 py-2 text-[11px] tracking-[0.22em] text-white/85 backdrop-blur-xl">
+          {toast}
+        </div>
+      )}
+
       <p className="text-xs tracking-[0.32em] text-white/45">SELECIONE</p>
 
       {/* tamanhos */}
       <div className="mt-5">
-        <p className="text-xs text-white/55">Tamanho</p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs text-white/55">Tamanho</p>
+
+          <button
+            type="button"
+            onClick={() => setOpenGuide(true)}
+            className="text-xs tracking-[0.22em] text-white/55 hover:text-white transition"
+          >
+            VER GUIA
+          </button>
+        </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
           {sizes.map((s) => {
@@ -79,6 +100,7 @@ export default function ProductPurchasePanel({ product }: Props) {
                 onClick={() => setSize(s)}
                 className={[
                   "rounded-full border px-4 py-2 text-xs tracking-[0.18em] transition",
+                  "active:scale-[0.98]",
                   active
                     ? "border-white/30 bg-white text-black"
                     : "border-white/12 bg-white/[0.02] text-white/80 hover:border-white/25 hover:bg-white/[0.05]",
@@ -104,7 +126,7 @@ export default function ProductPurchasePanel({ product }: Props) {
           <button
             type="button"
             onClick={dec}
-            className="h-9 w-9 rounded-full text-white/80 transition hover:bg-white/[0.06] hover:text-white"
+            className="h-9 w-9 rounded-full text-white/80 transition hover:bg-white/[0.06] hover:text-white active:scale-[0.98]"
             aria-label="Diminuir"
           >
             –
@@ -115,7 +137,7 @@ export default function ProductPurchasePanel({ product }: Props) {
           <button
             type="button"
             onClick={inc}
-            className="h-9 w-9 rounded-full text-white/80 transition hover:bg-white/[0.06] hover:text-white"
+            className="h-9 w-9 rounded-full text-white/80 transition hover:bg-white/[0.06] hover:text-white active:scale-[0.98]"
             aria-label="Aumentar"
           >
             +
@@ -124,7 +146,7 @@ export default function ProductPurchasePanel({ product }: Props) {
       </div>
 
       {/* subtotal + CTAs */}
-      <div className="mt-7 flex items-center justify-between gap-4">
+      <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <p className="text-xs tracking-[0.22em] text-white/40">SUBTOTAL</p>
           <p className="mt-2 text-lg font-semibold text-white/90">{formatBRL(subtotal)}</p>
@@ -133,19 +155,19 @@ export default function ProductPurchasePanel({ product }: Props) {
           </p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
           <button
             type="button"
             onClick={handleAddToCart}
-            className="rounded-2xl border border-white/18 bg-white/[0.02] px-5 py-4 text-xs tracking-[0.18em] text-white/85 transition hover:border-white/28 hover:bg-white/[0.05]"
+            className="w-full rounded-2xl border border-white/18 bg-white/[0.02] px-5 py-4 text-xs tracking-[0.18em] text-white/85 transition hover:border-white/28 hover:bg-white/[0.05] active:scale-[0.98] sm:w-auto"
           >
             ADD AO CARRINHO
           </button>
 
           <button
             type="button"
-            onClick={handleCheckout}
-            className="rounded-2xl bg-white px-6 py-4 text-xs tracking-[0.18em] text-black transition hover:opacity-90"
+            onClick={handleFinalize}
+            className="w-full rounded-2xl bg-white px-6 py-4 text-xs tracking-[0.18em] text-black transition hover:opacity-90 active:scale-[0.98] sm:w-auto"
           >
             FINALIZAR
           </button>
@@ -155,6 +177,10 @@ export default function ProductPurchasePanel({ product }: Props) {
       <div className="mt-6 text-xs tracking-[0.24em] text-white/35">
         PAGAMENTO SEGURO • TROCA SIMPLES • SUPORTE DIRETO
       </div>
+
+      <Modal open={openGuide} onClose={() => setOpenGuide(false)} title="Guia de Tamanhos">
+        <SizeGuide />
+      </Modal>
     </div>
   );
 }

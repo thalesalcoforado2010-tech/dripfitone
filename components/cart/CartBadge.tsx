@@ -1,24 +1,32 @@
-// components/cart/CartBadge.tsx
-"use client";
+'use client'
 
-import Link from "next/link";
-import { useCart } from "@/components/cart/CartContext";
+import { motion, AnimatePresence } from 'framer-motion'
+import { useCart } from './CartContext'
 
-export default function CartBadge() {
-  const { count } = useCart();
+export function CartBadge() {
+  const { count, isReady } = useCart()
+
+  if (!isReady) return null
 
   return (
-    <Link
-      href="/cart"
-      className="relative inline-flex items-center justify-center rounded-full border border-white/20 px-4 py-2 text-xs uppercase tracking-[0.18em] text-white/85 transition hover:border-white/30 hover:text-white"
-      aria-label="Carrinho"
-    >
-      Carrinho
+    <AnimatePresence>
       {count > 0 && (
-        <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1.5 text-[10px] font-semibold text-black">
+        <motion.div
+          key="cart-badge"
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.6, opacity: 0 }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 22,
+            delay: 0.05,
+          }}
+          className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1 text-xs font-medium text-white"
+        >
           {count}
-        </span>
+        </motion.div>
       )}
-    </Link>
-  );
+    </AnimatePresence>
+  )
 }

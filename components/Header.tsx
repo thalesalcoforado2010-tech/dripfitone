@@ -1,10 +1,11 @@
-// components/Header.tsx  (substitua o arquivo inteiro)
+// components/Header.tsx
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import CartBadge from "@/components/cart/CartBadge";
+import { CartBadge } from "@/components/cart/CartBadge";
+
 
 const NAV = [
   { href: "/masculino", label: "Masculino" },
@@ -22,15 +23,20 @@ export default function Header() {
   const shadow = useTransform(scrollY, [0, 90], ["0 0 0 rgba(0,0,0,0)", "0 18px 60px rgba(0,0,0,0.55)"]);
 
   return (
-    <motion.header style={{ y, scale }} className="fixed left-1/2 top-0 z-50 w-[92%] max-w-6xl -translate-x-1/2">
+    <motion.header
+      style={{ y, scale }}
+      className="fixed left-1/2 top-0 z-50 w-[92%] max-w-6xl -translate-x-1/2"
+    >
       <motion.div
         style={{ backgroundColor: bg, borderColor: border, boxShadow: shadow }}
         className="relative mt-3 flex items-center justify-between rounded-full border px-5 py-3 backdrop-blur-xl md:px-6 overflow-hidden"
       >
+        {/* brilho */}
         <div className="pointer-events-none absolute inset-0 rounded-full">
           <div className="absolute inset-0 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.10),transparent_60%)]" />
         </div>
 
+        {/* logo */}
         <Link href="/" className="relative z-10 flex items-center gap-3">
           <div className="flex h-7 w-7 items-center justify-center rounded-full bg-black shadow-inner shadow-black/60">
             <Image src="/icon.png" alt="DripFit One" width={16} height={16} priority />
@@ -41,6 +47,7 @@ export default function Header() {
           </span>
         </Link>
 
+        {/* nav */}
         <nav className="relative z-10 hidden items-center gap-6 md:flex">
           {NAV.map((item) => (
             <Link
@@ -53,13 +60,34 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="relative z-10 flex items-center gap-2">
-          <CartBadge />
+        {/* ações */}
+        <div className="relative z-10 flex items-center gap-3">
+          {/* carrinho */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="relative"
+          >
+            <Link href="/cart" className="relative flex h-9 w-9 items-center justify-center rounded-full border border-white/20">
+              <Image
+                src="/icons/cart.svg"
+                alt="Carrinho"
+                width={18}
+                height={18}
+              />
+              <CartBadge />
+            </Link>
+          </motion.div>
+
+          {/* botão comprar */}
           <Link
             href="/masculino"
             className="group relative overflow-hidden rounded-full border border-white/20 px-4 py-2 text-xs uppercase tracking-[0.18em] text-white/85"
           >
-            <span className="relative z-10 transition-colors duration-300 group-hover:text-black">Comprar</span>
+            <span className="relative z-10 transition-colors duration-300 group-hover:text-black">
+              Comprar
+            </span>
             <span className="absolute inset-0 -z-0 translate-y-full bg-white transition-transform duration-300 group-hover:translate-y-0" />
           </Link>
         </div>

@@ -7,14 +7,14 @@ import { motion, AnimatePresence } from "framer-motion";
 type Props = {
   name: string;
   priceLabel: string;
+  href?: string; // ex: "#purchase"
 };
 
-export default function StickyBuyBar({ name, priceLabel }: Props) {
+export default function StickyBuyBar({ name, priceLabel, href = "#purchase" }: Props) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
-      // aparece depois de um “hero scroll” (~1 tela)
       setShow(window.scrollY > 520);
     };
 
@@ -39,14 +39,15 @@ export default function StickyBuyBar({ name, priceLabel }: Props) {
                 <p className="truncate text-xs tracking-[0.22em] text-white/55">
                   {name}
                 </p>
-                <p className="text-sm font-semibold text-white/85">
-                  {priceLabel}
-                </p>
+                <p className="text-sm font-semibold text-white/85">{priceLabel}</p>
               </div>
 
-              <button className="shrink-0 rounded-full bg-white px-5 py-2 text-xs tracking-[0.18em] text-black transition hover:opacity-90">
+              <a
+                href={href}
+                className="shrink-0 rounded-full bg-white px-5 py-2 text-xs tracking-[0.18em] text-black transition hover:opacity-90"
+              >
                 COMPRAR
-              </button>
+              </a>
             </div>
           </div>
         </motion.div>
