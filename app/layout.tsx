@@ -1,7 +1,7 @@
-// app/layout.tsx  (substitua o arquivo inteiro)
+// app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
-import Header from "../components/Header";
+import HeaderV2 from "@/components/HeaderV2";
 import ClientLayout from "./ClientLayout";
 import Providers from "./Providers";
 
@@ -10,15 +10,19 @@ export const metadata: Metadata = {
   description: "Feito para quem transforma energia em movimento - Vista Drip.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="pt-BR">
       <body className="bg-black text-white">
         <Providers>
-          <Header />
-          <main className="pt-24">
-            <ClientLayout>{children}</ClientLayout>
-          </main>
+          <HeaderV2 />
+          <ClientLayout>
+            <main className="pt-16">{children}</main>
+          </ClientLayout>
         </Providers>
       </body>
     </html>

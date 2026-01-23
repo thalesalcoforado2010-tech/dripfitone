@@ -27,6 +27,67 @@ body{
 ::selection{
   background: rgba(255,255,255,0.14);
 }
+
 html {
   scroll-behavior: smooth;
+}
+
+/* === DripFit Header V2 (glass premium) === */
+/* Default = dark (porque seu site já é dark por padrão) */
+.glass-header{
+  background: rgba(10,10,12,0.62);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.header-shadow{
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+.icon-btn{
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(20,20,22,0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.badge-dot{
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 700;
+  background: #fff;
+  color: #111;
+  border: 2px solid rgba(10,10,12,0.9);
+}
+
+/* Optional: se você tiver tema light com class .light no html/body */
+.light .glass-header{
+  background: rgba(255,255,255,0.72);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.light .header-shadow{
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.light .icon-btn{
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.55);
+}
+
+.light .badge-dot{
+  background: #111;
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.9);
 }
