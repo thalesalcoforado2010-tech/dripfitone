@@ -1,11 +1,11 @@
 // components/checkout/CheckoutCartFlow.tsx
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useCart } from "../cart/CartContext";
-import { Button } from "../ui/Button";
-import { saveLastOrder } from "../order/OrderStore"; // se ainda sublinhar, troque para "../order/OrderStore.ts"
+import { useCart } from "@/components/cart/CartContext";
+import { Button } from "@/components/ui/Button";
+import { saveLastOrder } from "@/components/order/OrderStore";
 
 function generateOrderId() {
   const now = new Date();
@@ -19,23 +19,50 @@ function generateOrderId() {
 export default function CheckoutCartFlow() {
   const router = useRouter();
   const { items, subtotal, clear } = useCart();
+
   const [isProcessing, setIsProcessing] = useState(false);
 
-  function handleConfirmOrder() {
-    const order = {
+  const isEmpty = items.length === 0;
+
+  const orderPayload = useMemo(() => {
+    return {
       id: generateOrderId(),
       createdAt: new Date().toISOString(),
-      items,
+      items: items.map((it) => ({
+        id: it.id,
+        name: it.name,
+        size: String(it.size),
+        qty: it.qty,
+        price: it.price,
+      })),
       subtotal,
     };
+  }, [items, subtotal]);
 
-    saveLastOrder(order);
-    clear();
-    router.push("/checkout/confirm");
+  function handleConfirm() {
+    if (isProcessing || isEmpty) return;
+
+    setIsProcessing(true);
+
+    // micro-delay pra feedback visual premium
+    setTimeout(() => {
+      saveLastOrder(orderPayload);
+      clear();
+      router.push("/checkout/confirm");
+    }, 800);
   }
 
   return (
-    <div className="mx-auto mt-10 max-w-4xl space-y-8 px-4">
+    <div className="mx-auto mt-10 max-w-4xl space-y-8 px-4 pb-24">
+      {/* CHECKOUT HEADER */}
+      <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl">
+        <p className="text-xs tracking-[0.32em] text-white/45">CHECKOUT</p>
+        <h1 className="mt-3 text-2xl font-semibold text-white">Finalizar pedido</h1>
+        <p className="mt-2 text-sm text-white/60">
+          Estrutura premium pronta. Integrações (endereço/frete/pagamento) entram depois.
+        </p>
+      </div>
+
       {/* ENDEREÇO */}
       <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl">
         <p className="text-xs tracking-[0.32em] text-white/45">ENDEREÇO</p>
@@ -53,9 +80,7 @@ export default function CheckoutCartFlow() {
       {/* PAGAMENTO */}
       <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl">
         <p className="text-xs tracking-[0.32em] text-white/45">PAGAMENTO</p>
-        <p className="mt-3 text-sm text-white/60">
-          PIX ou Cartão (integração futura).
-        </p>
+        <p className="mt-3 text-sm text-white/60">PIX ou Cartão (integração futura).</p>
       </div>
 
       {/* RESUMO */}
@@ -69,15 +94,24 @@ export default function CheckoutCartFlow() {
 
         <div className="mt-6">
           <Button
+            onClick={handleConfirm}
             isLoading={isProcessing}
-            onClick={() => {
-              if (isProcessing) return;
-              setIsProcessing(true);
-              setTimeout(handleConfirmOrder, 900);
-            }}
+            disabled={isProcessing || isEmpty}
           >
-            Confirmar pedido
+            {isEmpty ? "Carrinho vazio" : "Confirmar pedido"}
           </Button>
+
+          {isProcessing && (
+            <p className="mt-3 text-xs tracking-[0.24em] text-white/40">
+              PROCESSANDO…
+            </p>
+          )}
+
+          {!isProcessing && isEmpty && (
+            <p className="mt-3 text-xs tracking-[0.24em] text-white/40">
+              Adicione itens ao carrinho para finalizar.
+            </p>
+          )}
         </div>
       </div>
     </div>

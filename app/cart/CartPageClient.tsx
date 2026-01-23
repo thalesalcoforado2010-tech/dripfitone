@@ -1,8 +1,8 @@
-// components/cart/CartPageClient.tsx
+// app/cart/CartPageClient.tsx
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/CartContext";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -20,6 +20,8 @@ export default function CartPageClient() {
   const router = useRouter();
   const { items, subtotal, removeItem, updateQty, clear, isReady } = useCart();
 
+  const [isGoingCheckout, setIsGoingCheckout] = useState(false);
+
   const count = useMemo(() => items.reduce((a, i) => a + i.qty, 0), [items]);
 
   function dec(id: string, qty: number) {
@@ -32,7 +34,21 @@ export default function CartPageClient() {
 
   function goCheckout() {
     if (items.length === 0) return;
-    router.push("/checkout");
+    if (isGoingCheckout) return;
+
+    setIsGoingCheckout(true);
+
+    // micro-delay para feedback premium + evitar double click
+    setTimeout(() => {
+      router.push("/checkout");
+    }, 350);
+  }
+
+  function handleClear() {
+    if (items.length === 0) return;
+    const ok = window.confirm("Tem certeza que deseja limpar o carrinho?");
+    if (!ok) return;
+    clear();
   }
 
   /* =========================
@@ -97,8 +113,9 @@ export default function CartPageClient() {
         <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 backdrop-blur-xl">
           <div className="flex items-center justify-between gap-3">
             <p className="text-xs tracking-[0.32em] text-white/45">ITENS</p>
+
             <button
-              onClick={clear}
+              onClick={handleClear}
               className="text-xs tracking-[0.22em] text-white/45 hover:text-white transition"
               type="button"
             >
@@ -184,15 +201,20 @@ export default function CartPageClient() {
         <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 backdrop-blur-xl">
           <p className="text-xs tracking-[0.32em] text-white/45">RESUMO</p>
 
-          <div className="mt-6">
+          <div className="mt-6 space-y-4">
             <div className="flex items-center justify-between text-sm text-white/70">
               <span>Subtotal</span>
               <span>{formatBRL(subtotal)}</span>
             </div>
 
-            <div className="mt-4 h-px w-full bg-white/10" />
+            <div className="flex items-center justify-between text-sm text-white/70">
+              <span>Frete</span>
+              <span className="text-white/45">Calculado no checkout</span>
+            </div>
 
-            <div className="mt-4 flex items-center justify-between text-white">
+            <div className="h-px w-full bg-white/10" />
+
+            <div className="flex items-center justify-between text-white">
               <span className="text-sm font-semibold">Total</span>
               <span className="text-lg font-semibold">
                 {formatBRL(subtotal)}
@@ -203,9 +225,10 @@ export default function CartPageClient() {
           <button
             type="button"
             onClick={goCheckout}
-            className="mt-8 w-full rounded-2xl bg-white px-6 py-4 text-xs tracking-[0.18em] text-black transition hover:opacity-90"
+            disabled={isGoingCheckout}
+            className="mt-8 w-full rounded-2xl bg-white px-6 py-4 text-xs tracking-[0.18em] text-black transition hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            IR PARA CHECKOUT
+            {isGoingCheckout ? "PROCESSANDO…" : "IR PARA CHECKOUT"}
           </button>
 
           <Link

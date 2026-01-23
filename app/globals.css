@@ -91,3 +91,9 @@ html {
   color: #fff;
   border: 2px solid rgba(255,255,255,0.9);
 }
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

@@ -19,7 +19,6 @@ type CartState = {
 };
 
 type CartContextValue = {
-  // ✅ novo: indica quando o carrinho já carregou do localStorage
   isReady: boolean;
 
   items: CartItem[];
@@ -33,7 +32,6 @@ type CartContextValue = {
 };
 
 const STORAGE_KEY = "dripfitone_cart_v1";
-
 const CartContext = createContext<CartContextValue | null>(null);
 
 function clampQty(qty: number) {
@@ -120,7 +118,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setState({ items: [] });
     }
 
-    // ✅ novo: expõe hydrated como isReady
     return { isReady: hydrated, items, count, subtotal, addItem, removeItem, updateQty, clear };
   }, [state.items, hydrated]);
 
