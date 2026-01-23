@@ -1,9 +1,10 @@
-// components/ProductPurchasePanel.tsx
+// components/ProductPurchasePanel.tsx  (substitua o arquivo inteiro)
 "use client";
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Product, Size } from "@/data/products";
+import { useCart } from "@/components/cart/CartContext";
 
 type Props = {
   product: Product;
@@ -22,13 +23,12 @@ const FALLBACK_SIZES: Size[] = ["P", "M", "G", "GG"];
 
 export default function ProductPurchasePanel({ product }: Props) {
   const router = useRouter();
+  const { addItem } = useCart();
 
   const sizes = useMemo(() => product.sizes ?? FALLBACK_SIZES, [product.sizes]);
 
   const initialSize = useMemo<Size>(() => {
-    if (product.defaultSize && sizes.includes(product.defaultSize)) {
-      return product.defaultSize;
-    }
+    if (product.defaultSize && sizes.includes(product.defaultSize)) return product.defaultSize;
     return sizes[0] ?? "M";
   }, [product.defaultSize, sizes]);
 
@@ -46,23 +46,18 @@ export default function ProductPurchasePanel({ product }: Props) {
   }
 
   function handleCheckout() {
-    // ✅ blindagem: se por algum motivo product.slug vier vazio, nem navega
-    if (!product?.slug) {
-      console.warn("[DripFit One] slug ausente no produto:", product);
-      return;
-    }
+    if (!product?.slug) return;
 
     const qs = new URLSearchParams();
     qs.set("slug", product.slug);
     qs.set("size", size);
     qs.set("qty", String(qty));
 
-    const url = `/checkout?${qs.toString()}`;
+    router.push(`/checkout?${qs.toString()}`);
+  }
 
-    // ✅ debug temporário: abre o console e CONFIRMA a URL
-    console.log("[DripFit One] Checkout URL:", url);
-
-    router.push(url);
+  function handleAddToCart() {
+    addItem(product, size, qty);
   }
 
   return (
@@ -101,8 +96,7 @@ export default function ProductPurchasePanel({ product }: Props) {
         <div>
           <p className="text-xs text-white/55">Quantidade</p>
           <p className="mt-1 text-sm font-semibold text-white/85">
-            {formatBRL(product.price)}{" "}
-            <span className="text-white/35">/ un.</span>
+            {formatBRL(product.price)} <span className="text-white/35">/ un.</span>
           </p>
         </div>
 
@@ -116,9 +110,7 @@ export default function ProductPurchasePanel({ product }: Props) {
             –
           </button>
 
-          <div className="w-10 text-center text-sm font-semibold text-white/85">
-            {qty}
-          </div>
+          <div className="w-10 text-center text-sm font-semibold text-white/85">{qty}</div>
 
           <button
             type="button"
@@ -131,25 +123,33 @@ export default function ProductPurchasePanel({ product }: Props) {
         </div>
       </div>
 
-      {/* subtotal + CTA */}
+      {/* subtotal + CTAs */}
       <div className="mt-7 flex items-center justify-between gap-4">
         <div className="min-w-0">
           <p className="text-xs tracking-[0.22em] text-white/40">SUBTOTAL</p>
-          <p className="mt-2 text-lg font-semibold text-white/90">
-            {formatBRL(subtotal)}
-          </p>
+          <p className="mt-2 text-lg font-semibold text-white/90">{formatBRL(subtotal)}</p>
           <p className="mt-2 text-xs tracking-[0.22em] text-white/35">
             TAMANHO {size} • {qty} UNIDADE{qty > 1 ? "S" : ""}
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={handleCheckout}
-          className="shrink-0 rounded-2xl bg-white px-6 py-4 text-xs tracking-[0.18em] text-black transition hover:opacity-90"
-        >
-          FINALIZAR
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className="rounded-2xl border border-white/18 bg-white/[0.02] px-5 py-4 text-xs tracking-[0.18em] text-white/85 transition hover:border-white/28 hover:bg-white/[0.05]"
+          >
+            ADD AO CARRINHO
+          </button>
+
+          <button
+            type="button"
+            onClick={handleCheckout}
+            className="rounded-2xl bg-white px-6 py-4 text-xs tracking-[0.18em] text-black transition hover:opacity-90"
+          >
+            FINALIZAR
+          </button>
+        </div>
       </div>
 
       <div className="mt-6 text-xs tracking-[0.24em] text-white/35">

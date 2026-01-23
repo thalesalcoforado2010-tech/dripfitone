@@ -1,7 +1,9 @@
+// app/layout.tsx  (substitua o arquivo inteiro)
 import "./globals.css";
 import type { Metadata } from "next";
 import Header from "../components/Header";
 import ClientLayout from "./ClientLayout";
+import Providers from "./Providers";
 
 export const metadata: Metadata = {
   title: "DripFit One",
@@ -12,10 +14,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR">
       <body className="bg-black text-white">
-        <Header />
-        <main className="pt-24">
-          <ClientLayout>{children}</ClientLayout>
-        </main>
+        <Providers>
+          <Header />
+          <main className="pt-24">
+            <ClientLayout>{children}</ClientLayout>
+          </main>
+        </Providers>
       </body>
     </html>
   );
