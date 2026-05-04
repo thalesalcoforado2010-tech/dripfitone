@@ -1,0 +1,1 @@
+// ARQUIVO OBRIGATÓRIO PARA DELETAR. Todo o seu conteúdo foi movido para app/produto/[slug]/page.tsx
