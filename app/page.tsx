@@ -24,7 +24,7 @@ export default function HomePage() {
 
               <div className="relative">
                 <p className="text-xs tracking-[0.28em] text-white/55">
-                  FEITO PARA QUEM TRANSFORMA ENERGIA EM MOVIMENTO
+                  FEITO PARA QUEM TRANSFORMA ENERGIA EM MOVIMENTO!
                 </p>
 
                 <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white/90 md:text-5xl">
