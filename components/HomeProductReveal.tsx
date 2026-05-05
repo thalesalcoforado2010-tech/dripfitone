@@ -1,7 +1,7 @@
 // components/HomeProductReveal.tsx
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 type Props = {
@@ -33,6 +33,10 @@ export default function HomeProductReveal({
   const detailOpacity = 1;
   const fullOpacity = useTransform(scrollYProgress, [0.22, 0.55], [0, 1]);
 
+  // Constante do Vídeo Para Ios
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+
   return (
     <section ref={ref} className="relative py-10">
       <div className="relative h-[240vh]">
@@ -53,27 +57,23 @@ export default function HomeProductReveal({
               <div className="pointer-events-none absolute inset-0 z-20 bg-black/30" />
 
               {/* DETALHE (vídeo) */}
-              <motion.div style={{ opacity: detailOpacity }} className="relative">
-                <video
-                  className="w-full h-full object-cover object-top"
-                  src={videoSrc}
-                  muted
-                  playsInline
-                  loop
-                  preload="metadata"
-                  autoPlay
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15" />
-              </motion.div>
+               <video
+               ref={videoRef}
+               className="absolute inset-0 w-full h-full object-cover"
+               muted
+               playsInline
+               loop
+               autoPlay
+               >
+                {/* Desktop */}
+                <source src="/home/hero-desktop.mp4" media="(min-width: 768px)" />
+                
+                {/* Mobile */}
+                <source src="/home/hero-bg.mp4" media="(max-width: 767px)" />
+                
+                </video>
 
-              {/* IMPACTO (imagem) */}
-              <motion.div style={{ opacity: fullOpacity }} className="absolute inset-0">
-                <img
-                  className="w-full object-contain"
-                  style={{ maxHeight: "80vh" }}
-                  loading="lazy"
-                />
-              </motion.div>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15" />
 
               {/* sombra mais silenciosa */}
               <div className="pointer-events-none absolute -bottom-12 left-1/2 h-24 w-[70%] -translate-x-1/2 rounded-full bg-black/40 blur-3xl" />
