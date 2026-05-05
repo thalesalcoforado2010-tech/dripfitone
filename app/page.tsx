@@ -57,9 +57,7 @@ export default function HomePage() {
 
         {/* PRODUCT REVEAL */}
         <HomeProductReveal
-          videoSrc="/home/hero-detail.mp4"
-          videoPoster="/home/poster.jpg"
-          fullImageSrc="/home/product-full.jpg"
+          videoSrc="/home/hero-bg.mp4"
         />
 
         {/* IMPACTO */}

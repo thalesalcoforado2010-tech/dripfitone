@@ -6,14 +6,10 @@ import { motion, useScroll, useTransform } from "framer-motion";
 
 type Props = {
   videoSrc: string;
-  videoPoster: string;
-  fullImageSrc: string;
 };
 
 export default function HomeProductReveal({
   videoSrc,
-  videoPoster,
-  fullImageSrc,
 }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -23,11 +19,7 @@ export default function HomeProductReveal({
   });
 
   // Entrada → presença → saída (Apple timing)
-  const opacity = useTransform(
-    scrollYProgress,
-    [0.0, 0.12, 0.62, 0.85, 1.0],
-    [0, 1, 1, 0, 0]
-  );
+  const opacity = 10;
 
   // Assentamento físico (produto vivo)
   const y = useTransform(scrollYProgress, [0, 0.22, 0.85, 1], [24, 0, 0, -16]);
@@ -38,7 +30,7 @@ export default function HomeProductReveal({
   );
 
   // Editorial: detalhe (vídeo) → impacto (imagem)
-  const detailOpacity = useTransform(scrollYProgress, [0.0, 0.28], [1, 0]);
+  const detailOpacity = 1;
   const fullOpacity = useTransform(scrollYProgress, [0.22, 0.55], [0, 1]);
 
   return (
@@ -63,10 +55,8 @@ export default function HomeProductReveal({
               {/* DETALHE (vídeo) */}
               <motion.div style={{ opacity: detailOpacity }} className="relative">
                 <video
-                  className="w-full object-contain"
-                  style={{ maxHeight: "80vh" }}
+                  className="w-full h-full object-cover object-top"
                   src={videoSrc}
-                  poster={videoPoster}
                   muted
                   playsInline
                   loop
@@ -79,8 +69,6 @@ export default function HomeProductReveal({
               {/* IMPACTO (imagem) */}
               <motion.div style={{ opacity: fullOpacity }} className="absolute inset-0">
                 <img
-                  src={fullImageSrc}
-                  alt="Produto DripFit One"
                   className="w-full object-contain"
                   style={{ maxHeight: "80vh" }}
                   loading="lazy"
