@@ -21,14 +21,18 @@ export default function HomePage() {
                 <div className="absolute -bottom-40 left-1/4 h-72 w-[520px] rounded-full bg-white/6 blur-3xl" />
               </div>
 
-              <div className="relative">
-                <p className="text-xs tracking-[0.28em] text-white/55">
-                  FEITO PARA QUEM TRANSFORMA ENERGIA EM MOVIMENTO!
+              <div className="relative flex min-h-[420px] flex-col items-center justify-center text-center">
+                <p className="text-xs tracking-[0.28em] text-white/40 uppercase">
+                  FEITO PARA QUEM TRANSFORMA ENERGIA EM MOVIMENTO
                 </p>
 
-                <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white/90 md:text-5xl">
-                  Vista Drip.
-                </h1>
+                <h1 className="mt-6 text-5xl md:text-7xl font-semibold tracking-[-0.04em] text-white">
+  Vista Drip.
+</h1>
+
+<p className="mt-3 text-sm tracking-[0.25em] text-white/40">
+  PERFORMANCE ESSENTIAL
+</p>
 
                 <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/55 md:text-base">
                   Uma estética premium, escura, precisa. Menos ruído. Mais presença.
@@ -37,14 +41,14 @@ export default function HomePage() {
                 <div className="mt-6 flex flex-wrap gap-2">
                   <Link
                     href="/masculino"
-                    className="rounded-2xl border border-white/12 bg-white/6 px-4 py-2 text-xs tracking-[0.16em] text-white/80 transition hover:bg-white/10 hover:text-white/90"
+                    className="rounded-full bg-white px-7 py-3 text-xs font-medium tracking-[0.22em] text-black transition-all duration-700 ease-out hover:scale-[1.03] hover:opacity-90"
                   >
                     MASCULINO
                   </Link>
 
                   <Link
-                    href="/feminino"
-                    className="rounded-2xl border border-white/12 bg-white/6 px-4 py-2 text-xs tracking-[0.16em] text-white/80 transition hover:bg-white/10 hover:text-white/90"
+                    href="/feminino   "
+                    className="rounded-full bg-white px-7 py-3 text-xs font-medium tracking-[0.22em] text-black transition-all duration-700 ease-out hover:scale-[1.03] hover:opacity-90"
                   >
                     FEMININO
                   </Link>
@@ -65,7 +69,7 @@ export default function HomePage() {
               <p className="text-xs tracking-[0.32em] text-white/40">IMPACTO</p>
 
               <h3 className="mt-4 text-3xl font-light tracking-tight text-white md:text-4xl">
-                Design que aparece sem gritar.
+                Presença não se explica.
               </h3>
 
               <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/55 md:text-base">
@@ -109,7 +113,7 @@ export default function HomePage() {
                     src="/home/masculino.jpg"
                     alt="Masculino"
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 </div>
@@ -136,7 +140,7 @@ export default function HomePage() {
                     src="/home/feminino.jpg"
                     alt="Feminino"
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 </div>

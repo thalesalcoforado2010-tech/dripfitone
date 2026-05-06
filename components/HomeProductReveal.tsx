@@ -21,11 +21,11 @@ export default function HomeProductReveal({}: Props)
 
   // Assentamento físico (produto vivo)
   const y = useTransform(scrollYProgress, [0, 0.22, 0.85, 1], [24, 0, 0, -16]);
-  const scale = useTransform(
-    scrollYProgress,
-    [0, 0.2, 0.85, 1],
-    [1.06, 1, 1, 0.99]
-  );
+ const scale = useTransform(
+  scrollYProgress,
+  [0, 0.2, 1],
+  [1.1, 1, 0.98]
+);
 
   // Editorial: detalhe (vídeo) → impacto (imagem)
   const detailOpacity = 1;
@@ -36,6 +36,7 @@ export default function HomeProductReveal({}: Props)
   const [isMobile, setIsMobile] = useState(false);
 
   const [videoSrc, setVideoSrc] = useState("/home/hero-desktop.mp4");
+  
 
 useEffect(() => {
   const mediaQuery = window.matchMedia("(max-width: 767px)");
@@ -77,7 +78,6 @@ useEffect(() => {
 >
            <div className="absolute inset-0 w-full h-full">
               {/* integração sutil com o fundo (sem mask radial) */}
-              <div className="pointer-events-none absolute inset-0 z-20 bg-black/30" />
 
               {/* DETALHE (vídeo) */}
              <video
@@ -89,9 +89,12 @@ useEffect(() => {
   playsInline
   loop
   autoPlay
+  style={{
+  filter: "contrast(1.1) brightness(1.05)"
+}}
 />
 
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent" />
 
               {/* sombra mais silenciosa */}
               <div className="pointer-events-none absolute -bottom-12 left-1/2 h-24 w-[70%] -translate-x-1/2 rounded-full bg-black/40 blur-3xl" />

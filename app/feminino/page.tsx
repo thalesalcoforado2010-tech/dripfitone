@@ -16,7 +16,7 @@ export default function FemininoPage() {
       <section className="mx-auto max-w-6xl px-4 pt-16 pb-16">
         <ScrollReveal>
           <p className="text-xs tracking-[0.32em] text-white/40">FEMININO</p>
-          <h1 className="mt-4 text-3xl font-light tracking-tight md:text-4xl">
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white/90 md:text-4xl">
             Silhueta com presença.
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/55 md:text-base">
