@@ -12,7 +12,6 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="mx-auto max-w-6xl px-4">
         {/* HERO */}
         <section className="pt-10 pb-10">
           <ScrollReveal>
@@ -56,9 +55,8 @@ export default function HomePage() {
         </section>
 
         {/* PRODUCT REVEAL */}
-        <HomeProductReveal
-          videoSrc="/home/hero-bg.mp4"
-        />
+        <HomeProductReveal />
+      
 
         {/* IMPACTO */}
         <section className="py-24">
@@ -234,7 +232,6 @@ export default function HomePage() {
 
         {/* ANCHOR BUY */}
         <div id="buy" className="h-1" />
-      </div>
     </>
   );
 }
